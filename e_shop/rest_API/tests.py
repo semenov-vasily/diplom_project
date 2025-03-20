@@ -18,9 +18,9 @@ class ProductsListTest(TestCase):
         response = self.client.post(
             '/register/',
             {
-                "username": "testuser",
-                "email": "testuser@example.com",
-                "password": "testpassword123"
+                "username": "user1",
+                "email": "user1@domain.com",
+                "password": "qwerty12345"
             },
             format='json'
         )
@@ -30,8 +30,8 @@ class ProductsListTest(TestCase):
         response = self.client.post(
             '/api-token-auth/',
             {
-                "username": "testuser",
-                "password": "testpassword123"
+                "username": "user1",
+                "password": "qwerty12345"
             },
             format='json'
         )
