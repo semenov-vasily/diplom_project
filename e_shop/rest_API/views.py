@@ -44,6 +44,30 @@ class CartView(APIView):
         except Cart.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+
+class RegisterView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        supplier_id = self.request.query_params.get('supplier', None)
+        if supplier_id:
+            return self.queryset.filter(supplier_id=supplier_id)
+        return self.queryset
+
+
+
 class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]
@@ -123,3 +147,52 @@ class SupplierViewSet(viewsets.ModelViewSet):
     serializer_class = SupplierSerializer
 
 
+class ContactView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        contacts = Contact.objects.filter(user=request.user)
+        serializer = ContactSerializer(contacts, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        # If 'id' is provided, update the contact, else create a new one
+        contact_id = request.data.get('id', None)
+        if contact_id:
+            try:
+                contact = Contact.objects.get(id=contact_id, user=request.user)
+                serializer = ContactSerializer(contact, data=request.data)
+                if serializer.is_valid():
+                    serializer.save(user=request.user)
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            except Contact.DoesNotExist:
+                return Response({"error": "Contact not found"}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            # Create a new contact
+            serializer = ContactSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(user=request.user)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, contact_id):
+        try:
+            contact = Contact.objects.get(id=contact_id, user=request.user)
+            contact.delete()
+            return Response({"message": "Contact deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+        except Contact.DoesNotExist:
+            return Response({"error": "Contact not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class OrderListView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = OrderSerializer
+
+    def get_queryset(self):
+        try:
+            logging.debug(f"Request user: {self.request.user}")
+            return Order.objects.filter(buyer=self.request.user)
+        except Exception as e:
+            logging.error(f"Error retrieving orders: {e}")
+            return Order.objects.none()

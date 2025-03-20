@@ -28,3 +28,21 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ['id', 'title', 'description', 'supplier', 'price', 'quantity', 'parameters']
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = ['product', 'quantity', 'price']
+
+class OrderSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True)
+
+    class Meta:
+        model = Order
+        fields = ['id', 'buyer', 'contact_info', 'created_timestamp', 'updated_timestamp', 'status', 'items']
+        read_only_fields = ['buyer', 'created_timestamp', 'updated_timestamp', 'items']
+
+class CartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cart
+        fields = ['id', 'owner', 'product', 'quantity']

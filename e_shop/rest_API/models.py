@@ -49,3 +49,28 @@ class OrderItem(models.Model):
     def __str__(self):
         return f'{self.quantity} x {self.product.title}'
 
+class Cart(models.Model):
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    items = models.ManyToManyField('Product', through='CartItem')  # or another related model
+
+    def __str__(self):
+        return f"Cart for {self.owner}"
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, related_name='cart_items', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.quantity} x {self.product.title} in cart of {self.cart.owner}"
+
+class Contact(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    fname = models.CharField(max_length=255)
+    lname = models.CharField(max_length=255)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    address = models.TextField()
+
+    def __str__(self):
+        return f'{self.fname} {self.lname}'
