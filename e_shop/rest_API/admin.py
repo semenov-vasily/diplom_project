@@ -5,6 +5,11 @@ from django.contrib import messages
 from .models import Supplier, Product, Cart, Contact, Order
 from .forms import ProductAdminForm, BulkUpdateForm
 
+@admin.action(description="Массовое обновление цен")
+def bulk_update_price(modeladmin, request, queryset):
+    # Здесь логика обновления цены. Для примера:
+    queryset.update(price=1000)
+
 @admin.register(Supplier)
 class SupplierAdmin(admin.ModelAdmin):
     list_display = [field.name for field in Supplier._meta.fields]
@@ -14,6 +19,9 @@ class ProductAdmin(admin.ModelAdmin):
     form = ProductAdminForm
     list_display = [field.name for field in Product._meta.fields]
 
+    # Подключаем экшен
+    actions = [bulk_update_price]
+
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
@@ -22,13 +30,12 @@ class ProductAdmin(admin.ModelAdmin):
         return custom_urls + urls
 
     def changelist_view(self, request, extra_context=None):
+        print("=== ProductAdmin changelist_view called ===")
         extra_context = extra_context or {}
-        # Добавляем ссылку на bulk update в контекст
         extra_context['bulk_update_url'] = 'bulk-update/'
         return super().changelist_view(request, extra_context=extra_context)
 
     def bulk_update_view(self, request):
-        # Реализация bulk update
         if request.method == 'POST':
             form = BulkUpdateForm(request.POST)
             if form.is_valid():
