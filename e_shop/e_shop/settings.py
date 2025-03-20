@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_API",
+    "rest_framework",
+    "rest_framework.authtoken",
 ]
 
 MIDDLEWARE = [
@@ -75,8 +78,12 @@ WSGI_APPLICATION = "e_shop.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "retail_db",      # имя вашей базы данных
+        "USER": "postgres",      # имя пользователя базы данных
+        "PASSWORD": "postgres",  # пароль
+        "HOST": "localhost",         # или IP-адрес контейнера, если база в контейнере
+        "PORT": "5432",              # стандартный порт PostgreSQL
     }
 }
 

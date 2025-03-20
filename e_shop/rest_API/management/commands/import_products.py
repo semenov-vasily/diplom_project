@@ -3,7 +3,6 @@ import yaml
 from django.core.management.base import BaseCommand
 from ...models import Product, Supplier
 
-
 class Command(BaseCommand):
     help = 'Import products from a YAML file'
 
@@ -22,7 +21,7 @@ class Command(BaseCommand):
             # Create products for each item in the goods list
             for product in data['goods']:
                 Product.objects.create(
-                    name=product['name'],
+                    title=product['name'],
                     supplier=supplier,
                     price=product['price'],
                     quantity=product['quantity'],

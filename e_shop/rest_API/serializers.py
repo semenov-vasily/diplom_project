@@ -22,7 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
 class SupplierSerializer(serializers.ModelSerializer):
     class Meta:
         model = Supplier
-        fields = ['id', 'supplier_name', 'is_active']
+        fields = ['id', 'name', 'is_active']
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:

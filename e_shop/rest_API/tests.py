@@ -3,19 +3,8 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from rest_framework.test import APIClient
 
+
 class ShopAPITests(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        # Загрузим тестовый контент из файла фикстур.
-        # Файл shop1.yaml должен находиться в каталоге, откуда Django может его найти.
-        call_command('loaddata', 'data/shop1.yaml')
-
-        # Для проверки эндпоинтов аутентификации создадим тестового пользователя.
-        cls.test_user = User.objects.create_user(username='testuser', password='testpass')
-
-    def setUp(self):
-        self.client = APIClient()
-
     def test_products_list(self):
         # Проверка получения списка товаров
         response = self.client.get('/products/')
