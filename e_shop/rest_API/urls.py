@@ -3,7 +3,6 @@ from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 from .views import ProductViewSet, OrderViewSet, SupplierViewSet, ContactView, OrderListView, RegisterView, ShoppingCartView
 from rest_framework.authtoken.views import obtain_auth_token
-from django.http import HttpResponse
 
 
 api_router = DefaultRouter()
@@ -13,7 +12,7 @@ api_router.register(r'suppliers', SupplierViewSet, basename='supplier')
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='django_admin'),
     path('register/', RegisterView.as_view(), name='register'),
     path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
     path('cart/', ShoppingCartView.as_view(), name='cart'),
