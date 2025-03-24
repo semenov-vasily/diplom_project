@@ -44,6 +44,10 @@ python manage.py runserver
 celery -A e_shop worker -l info
 ```
 
+### По адресу http://127.0.0.1:8000/api/schema/swagger-ui/ доступен Swagger UI
+### По адресу http://127.0.0.1:8000/api/schema/redoc/ - Redoс   
+### По адресу JSON/YAML схема по адресу http://127.0.0.1:8000/api/schema/ - JSON/YAML схема
+
 ### Создаем клиента магазина
 ```bash
 curl -X POST http://127.0.0.1:8000/register/ \

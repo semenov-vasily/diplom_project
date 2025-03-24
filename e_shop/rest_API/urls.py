@@ -3,6 +3,8 @@ from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 from .views import ProductViewSet, OrderViewSet, SupplierViewSet, ContactView, OrderListView, RegisterView, ShoppingCartView
 from rest_framework.authtoken.views import obtain_auth_token
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+
 
 
 api_router = DefaultRouter()
@@ -20,4 +22,8 @@ urlpatterns = [
     path('orders/', OrderListView.as_view(), name='order-list'),
     path('contacts/<int:contact_id>/', ContactView.as_view(), name='contact-delete'),
     path('', include(api_router.urls)),
+    # drf-spectacular:
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),  # основная схема
+    path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]

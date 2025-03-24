@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "rest_API",
     "rest_framework",
     "rest_framework.authtoken",
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -140,3 +141,13 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'admin@e-shop.com'
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'E-Shop REST API',
+    'DESCRIPTION': 'Документация для интернет-магазина',
+    'VERSION': '1.0.0',
+}
