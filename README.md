@@ -38,6 +38,12 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
+### Стартуем Celery
+#### в другом терминале:
+```bash
+celery -A e_shop worker -l info
+```
+
 ### Создаем клиента магазина
 ```bash
 curl -X POST http://127.0.0.1:8000/register/ \

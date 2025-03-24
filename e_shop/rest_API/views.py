@@ -11,7 +11,8 @@ from .serializers import (
     ProductSerializer, OrderSerializer, SupplierSerializer,
     ContactSerializer, UserSerializer, CartSerializer
 )
-from .others import send_order_mail_confirm
+from .tasks import send_order_email
+
 
 logger = logging.getLogger(__name__)
 
@@ -122,7 +123,8 @@ class OrderViewSet(viewsets.ModelViewSet):
         # Очищаем корзину после подтверждения заказа
         cart.items.all().delete()
         logger.debug(f"Корзина {cart_id} очищена после подтверждения заказа.")
-        send_order_mail_confirm(order, contact.email)
+        # send_order_mail_confirm(order, contact.email)
+        send_order_email.delay(order.id, contact.email)
         return Response({"status": "Заказ успешно подтвержден", "order_id": order.id}, status=status.HTTP_201_CREATED)
 
     @action(detail=True, methods=['patch'], url_path='update-status')
